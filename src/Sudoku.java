@@ -1,16 +1,72 @@
+import java.util.Random;
+import javax.swing.*;
+import java.awt.Color;
+import java.awt.Container;
 
 public class Sudoku {
 
 	public static void main(String[] args) {
+		int[][] board = new int[9][9];
+		generateRandomBoard(board);
 		
+		JFrame frame = new JFrame("Sudoku");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(600,700);
+		
+		JButton button = new JButton("Solve");
+		frame.getContentPane().add(button);
+		frame.getContentPane().setBackground(Color.black);
+
+		
+		
+		Container con = frame.getContentPane();
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(100,100, 400, 400);
+		panel.setBackground(Color.white);
+		con.add(panel);
+		
+		frame.setLayout(null);
+		frame.setVisible(true);
 	}
 	
 	public static Boolean solve(int[][] board) {
-		
+		for(int i = 0; i < board.length; i++) {
+			for(int j = 0; j < board[i].length; j++) {
+				if(board[i][j] == 0) {
+					for(int k = 1; k <= 9; k++) {
+						board[i][j] = k;
+						if(!validate(board,i,j)) {
+							board[i][j] = 0;
+							continue;
+						}
+						if(solve(board)) {
+							return true;
+						}
+					}
+					return false;
+				}
+			}
+		}
+		if(isSolved(board))
+			return true;
+		return false;
 	}
 	
 	public static void generateRandomBoard(int[][] board) {
+		Random rand = new Random();
+		int r = rand.nextInt(9) + 1;
+		int x = rand.nextInt(9);
+		int y = rand.nextInt(9);
+		board[x][y] = r;
+		solve(board);
 		
+		for(int i = 0; i < 60; i++) {
+			x = rand.nextInt(9);
+			y = rand.nextInt(9);
+			board[x][y] = 0;
+		}
+		printBoard(board);
 	}
 	
 	public static void printBoard(int[][] board) {
