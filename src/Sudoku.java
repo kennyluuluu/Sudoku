@@ -1,64 +1,23 @@
 import java.util.Random;
-import javax.swing.*;
-import java.awt.*;
 
 public class Sudoku {
 
 	public static void main(String[] args) {
 		int[][] board = new int[9][9];
-		long times = 0;
 		generateRandomBoard(board);
-		printBoard(board);
-		long startTime = System.nanoTime();
-		solve(board);
-		long stopTime = System.nanoTime();
-		times += (stopTime-startTime);
-		System.out.println("Board Solved in " + times/10 + " nanoseconds");
-		printBoard(board);
-		
-		
-		
-		JFrame frame = new JFrame("Sudoku");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600,700);
-		frame.setLayout(null);
-		frame.getContentPane().setBackground(Color.pink);
+		GUI frame = new GUI(board);
+	}
 	
+	public static long measurePerformance() {
+		int[][] test = new int[9][9];
+		generateRandomBoard(test);
+		long startTime = System.nanoTime();
+		solve(test);
+		long stopTime = System.nanoTime();
 		
-		JLabel titleText = new JLabel("Sudoku Solver");
-		titleText.setFont(new Font("Serif", Font.BOLD, 40));
-		titleText.setSize(400,80);
-		frame.add(titleText);
-		
-		JPanel sudokuBoard = new JPanel();
-		sudokuBoard.setBackground(Color.black);
-		sudokuBoard.setBounds(100, 100, 400, 400);
-		sudokuBoard.setLayout(new GridLayout(3,3,4,4));
-		
-		for(int ii = 0; ii < 3; ii++) {
-			for(int jj = 0; jj < 3; jj++) {
-				JPanel square = new JPanel();
-				square.setBackground(Color.black);
-				square.setLayout(new GridLayout(3,3,1,1));
-				for(int i = 0; i < 3; i++) {
-					for(int j = 0; j < 3; j++) {
-						
-						JLabel label = new JLabel(String.valueOf(board[ii*3 + i][jj*3 + j]));
-						label.setBackground(Color.white);
-						label.setOpaque(true);
-						square.add(label);
-					}
-				}
-				sudokuBoard.add(square);
-			}
-		}
-		frame.add(sudokuBoard);
-
-		JButton solveButton = new JButton("solve");
-		solveButton.setBounds(0,600, 80,20);
-		frame.add(solveButton);
-		
-		frame.setVisible(true);
+		long time = stopTime - startTime;
+		System.out.println("Board Solved in " + time + " nanoseconds");
+		return time;
 	}
 	
 	public static Boolean solve(int[][] board) {
